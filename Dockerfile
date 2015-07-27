@@ -1,8 +1,11 @@
 FROM tomcat:8.0
-MAINTAINER Alessio Garzi <gun101@email.it>
 
-RUN mkdir -p /usr/local/tomcat/webapps/
-ENV WEATHERSTATION_VERSION=$(curl -s https://api.github.com/repos/Ozzyboshi/WeatherstationJavaWS/releases/latest | grep tag_name | head -n 1 | cut -d '"' -f 4)
-ADD https://github.com/Ozzyboshi/WeatherstationJavaWS/archive/$WEATHERSTATION_VERSION.tar.gz /usr/local/tomcat/webapps/
-RUN cd /usr/local/tomcat/webapps && tar -xvzpf $WEATHERSTATION_VERSION.tar.gz && rm $WEATHERSTATION_VERSION.tar.gz 
+RUN apt-get update -q
+RUN apt-get install -qy git
+RUN apt-get install -qy openjdk-7-jre
+RUN apt-get install -qy openjdk-7-jdk
+ADD tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
+RUN git clone https://github.com/Ozzyboshi/WeatherstationJavaWS.git /tmp/WeatherStation
+RUN cp -r /tmp/WeatherStation/build/classes /tmp/WeatherStation/WebContent/WEB-INF/
+RUN cd /tmp/WeatherStation/WebContent && jar -cvf $CATALINA_HOME/webapps/WeatherStation.war *
 
