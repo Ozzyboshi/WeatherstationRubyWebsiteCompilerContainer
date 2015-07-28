@@ -5,5 +5,4 @@ RUN apt-get install -qy git
 RUN apt-get install -qy openjdk-7-jre
 RUN apt-get install -qy openjdk-7-jdk
 ADD compila.sh /
-ENTRYPOINT compila.sh
 
